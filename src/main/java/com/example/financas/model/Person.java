@@ -1,6 +1,14 @@
 package com.example.financas.model;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,7 +29,7 @@ public class Person {
 
     @ElementCollection
     @CollectionTable(name = "TELEFONE")
-    private Set<String> phoneNumber = new HashSet<>();
+    private Set<String> phoneNumbers = new HashSet<>();
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Bill> bills = new ArrayList<>();
@@ -52,12 +60,12 @@ public class Person {
         this.name = name;
     }
 
-    public Set<String> getPhoneNumber() {
-        return phoneNumber;
+    public Set<String> getPhoneNumbers() {
+        return phoneNumbers;
     }
 
-    public void setPhoneNumber(Set<String> phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhoneNumbers(Set<String> phoneNumber) {
+        this.phoneNumbers = phoneNumber;
     }
 
     public String getEmail() {
@@ -102,7 +110,7 @@ public class Person {
         return "Person{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", phoneNumber=" + phoneNumber +
+                ", phoneNumber=" + phoneNumbers +
                 ", email='" + email + '\'' +
                 ", bills=" + bills +
                 '}';

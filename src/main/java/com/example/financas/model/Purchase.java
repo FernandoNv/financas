@@ -18,11 +18,12 @@ public class Purchase {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
-    private Double price;
+    private Double priceTotal;
+    private Double priceShared;
     private String description;
     private int instalments;
     private int paidInstalments;
-    private boolean shared;
+    private boolean isShared;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -39,14 +40,14 @@ public class Purchase {
     public Purchase() {
     }
 
-    public Purchase(Long id, LocalDate date, Double price, String description, int instalments, int paidInstalments, boolean shared) {
+    public Purchase(Long id, LocalDate date, Double priceTotal, String description, int instalments, int paidInstalments, boolean isShared) {
         this.id = id;
         this.date = date;
-        this.price = price;
+        this.priceTotal = priceTotal;
         this.description = description;
         this.instalments = instalments;
         this.paidInstalments = paidInstalments;
-        this.shared = shared;
+        this.isShared = isShared;
     }
 
     public Long getId() {
@@ -65,12 +66,24 @@ public class Purchase {
         this.date = date;
     }
 
-    public Double getPrice() {
-        return price;
+    public Double getPriceTotal() {
+        return priceTotal;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setPriceTotal(Double priceTotal) {
+        this.priceTotal = priceTotal;
+    }
+
+    public Double getPriceShared() {
+        return priceShared;
+    }
+
+    public void setPriceShared(Double priceShared) {
+        this.priceShared = priceShared;
+    }
+
+    public void setPriceShared() {
+        if(isShared && bills.size() > 0) this.priceShared = priceTotal/bills.size();
     }
 
     public String getDescription() {
@@ -98,11 +111,11 @@ public class Purchase {
     }
 
     public boolean isShared() {
-        return shared;
+        return isShared;
     }
 
     public void setShared(boolean shared) {
-        this.shared = shared;
+        isShared = shared;
     }
 
     public Category getCategory() {
@@ -139,11 +152,12 @@ public class Purchase {
         return "Purchase{" +
                 "id=" + id +
                 ", date=" + date +
-                ", price=" + price +
+                ", priceTotal=" + priceTotal +
+                ", priceShared=" + priceShared +
                 ", description='" + description + '\'' +
                 ", instalments=" + instalments +
                 ", paidInstalments=" + paidInstalments +
-                ", shared=" + shared +
+                ", isShared=" + isShared +
                 ", category=" + category +
                 ", bills=" + bills +
                 '}';
