@@ -1,19 +1,38 @@
-package com.example.financas.domain;
+package com.example.financas.model;
 
-import java.util.Comparator;
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
 
+@Entity
 public class Category {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false, updatable = false)
+    private LocalDate createdAt;
 
-    private Set<Purchase> purchaseSet = new TreeSet<>(Comparator.comparing(Purchase::getDate));
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Purchase> purchases = new ArrayList<>();
 
-    public Category(Long id, String name) {
+    public Category() {
+    }
+
+    public Category(Long id, String name, LocalDate createdAt) {
         this.id = id;
         this.name = name;
+        this.createdAt = createdAt;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -32,12 +51,12 @@ public class Category {
         this.name = name;
     }
 
-    public Set<Purchase> getPurchaseSet() {
-        return purchaseSet;
+    public List<Purchase> getPurchases() {
+        return purchases;
     }
 
-    public void setPurchaseSet(Set<Purchase> purchaseSet) {
-        this.purchaseSet = purchaseSet;
+    public void setPurchases(List<Purchase> purchases) {
+        this.purchases = purchases;
     }
 
     @Override

@@ -1,25 +1,47 @@
-package com.example.financas.domain;
+package com.example.financas.model;
 
-import java.util.Comparator;
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeSet;
 
+@Entity
 public class Person {
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
-    private String phoneNumber;
+    @Column(nullable = false)
     private String email;
+    private LocalDate createdAt;
 
-    private Set<Purchase> purchaseSet = new TreeSet<>(Comparator.comparing(Purchase::getDate));
-    private Set<Bill> billSet = new TreeSet<>(Comparator.comparing(Bill::getExpiredAt));
+    @ElementCollection
+    @CollectionTable(name = "TELEFONE")
+    private Set<String> phoneNumber = new HashSet<>();
 
-    public Person(Long id, String name, String phoneNumber, String email) {
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private List<Bill> bills = new ArrayList<>();
+
+    public Person() {
+    }
+
+    public Person(Long id, String name, String email, LocalDate createdAt) {
         this.id = id;
         this.name = name;
-        this.phoneNumber = phoneNumber;
         this.email = email;
+        this.createdAt = createdAt;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getName() {
@@ -30,11 +52,11 @@ public class Person {
         this.name = name;
     }
 
-    public String getPhoneNumber() {
+    public Set<String> getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(Set<String> phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -54,20 +76,12 @@ public class Person {
         this.id = id;
     }
 
-    public Set<Purchase> getPurchaseSet() {
-        return purchaseSet;
+    public List<Bill> getBills() {
+        return bills;
     }
 
-    public void setPurchaseSet(Set<Purchase> purchaseSet) {
-        this.purchaseSet = purchaseSet;
-    }
-
-    public Set<Bill> getBillSet() {
-        return billSet;
-    }
-
-    public void setBillSet(Set<Bill> billSet) {
-        this.billSet = billSet;
+    public void setBills(List<Bill> bills) {
+        this.bills = bills;
     }
 
     @Override
@@ -88,8 +102,9 @@ public class Person {
         return "Person{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", phoneNumber=" + phoneNumber +
                 ", email='" + email + '\'' +
+                ", bills=" + bills +
                 '}';
     }
 }

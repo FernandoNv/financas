@@ -1,28 +1,60 @@
-package com.example.financas.domain;
+package com.example.financas.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
+@Entity
 public class Purchase {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
-    private double price;
+    private Double price;
     private String description;
     private int instalments;
+    private int paidInstalments;
     private boolean shared;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
-    private Set<Person> personSet = new HashSet<>();
-    private Set<Bill> billSet = new TreeSet<>(Comparator.comparing(Bill::getExpiredAt));
 
-    public Purchase(Long id, LocalDate date, double price, String description, int instalments, boolean shared, Category category) {
+    @ManyToMany
+    @JoinTable(
+            name = "purchase_bill",
+            joinColumns = @JoinColumn(name = "purchase_id"),
+            inverseJoinColumns = @JoinColumn(name = "bill_id")
+    )
+    private List<Bill> bills = new ArrayList<>();
+
+    public Purchase() {
+    }
+
+    public Purchase(Long id, LocalDate date, Double price, String description, int instalments, int paidInstalments, boolean shared) {
         this.id = id;
         this.date = date;
         this.price = price;
         this.description = description;
         this.instalments = instalments;
+        this.paidInstalments = paidInstalments;
         this.shared = shared;
-        this.category = category;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDate getDate() {
@@ -33,11 +65,11 @@ public class Purchase {
         this.date = date;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -57,20 +89,20 @@ public class Purchase {
         this.instalments = instalments;
     }
 
+    public int getPaidInstalments() {
+        return paidInstalments;
+    }
+
+    public void setPaidInstalments(int paidInstalments) {
+        this.paidInstalments = paidInstalments;
+    }
+
     public boolean isShared() {
         return shared;
     }
 
     public void setShared(boolean shared) {
         this.shared = shared;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Category getCategory() {
@@ -81,20 +113,12 @@ public class Purchase {
         this.category = category;
     }
 
-    public Set<Person> getPersonSet() {
-        return personSet;
+    public List<Bill> getBills() {
+        return bills;
     }
 
-    public void setPersonSet(Set<Person> personSet) {
-        this.personSet = personSet;
-    }
-
-    public Set<Bill> getBillSet() {
-        return billSet;
-    }
-
-    public void setBillSet(Set<Bill> billSet) {
-        this.billSet = billSet;
+    public void setBills(List<Bill> bills) {
+        this.bills = bills;
     }
 
     @Override
@@ -118,7 +142,10 @@ public class Purchase {
                 ", price=" + price +
                 ", description='" + description + '\'' +
                 ", instalments=" + instalments +
+                ", paidInstalments=" + paidInstalments +
                 ", shared=" + shared +
+                ", category=" + category +
+                ", bills=" + bills +
                 '}';
     }
 }

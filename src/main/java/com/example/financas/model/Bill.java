@@ -1,17 +1,27 @@
-package com.example.financas.domain;
+package com.example.financas.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
 
+@Entity
 public class Bill {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private LocalDate expiredAt;
 
+    @ManyToOne
+    @JoinColumn(name = "person_id")
     private Person person;
-    private Set<Purchase> purchaseSet = new TreeSet<>(Comparator.comparing(Purchase::getDate));
+
+    @ManyToMany(mappedBy = "bills", cascade = CascadeType.ALL)
+    private List<Purchase> purchases = new ArrayList<>();
+
+    public Bill() {
+    }
 
     public Bill(Long id, LocalDate expiredAt) {
         this.id = id;
@@ -35,7 +45,7 @@ public class Bill {
     }
 
     public double getTotalPrice() {
-        return purchaseSet.stream().map(Purchase::getPrice).reduce(0d, Double::sum);
+        return purchases.stream().map(Purchase::getPrice).reduce(0d, Double::sum);
     }
 
     public Person getPerson() {
@@ -46,12 +56,12 @@ public class Bill {
         this.person = person;
     }
 
-    public Set<Purchase> getPurchaseSet() {
-        return purchaseSet;
+    public List<Purchase> getPurchases() {
+        return purchases;
     }
 
-    public void setPurchaseSet(Set<Purchase> purchaseSet) {
-        this.purchaseSet = purchaseSet;
+    public void setPurchases(List<Purchase> purchases) {
+        this.purchases = purchases;
     }
 
     @Override
