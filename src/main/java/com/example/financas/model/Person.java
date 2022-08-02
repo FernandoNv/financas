@@ -23,8 +23,9 @@ public class Person {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
+    @Column(unique = true)
     private String email;
+    @Column(updatable = false)
     private LocalDate createdAt;
 
     @ElementCollection

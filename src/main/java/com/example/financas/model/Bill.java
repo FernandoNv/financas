@@ -22,7 +22,7 @@ public class Bill {
     private LocalDate expiredAt;
 
     @ManyToOne
-    @JoinColumn(name = "person_id")
+    @JoinColumn(name = "fk_person_id")
     private Person person;
 
     @ManyToMany(mappedBy = "bills", cascade = CascadeType.ALL)
@@ -52,6 +52,7 @@ public class Bill {
         this.expiredAt = expiredAt;
     }
 
+    @Column(precision = 10, scale = 2)
     public double getTotalPrice() {
         return purchases.stream().map(p -> p.isShared() ? p.getPriceShared() : p.getPriceTotal()).reduce(0d, Double::sum);
     }

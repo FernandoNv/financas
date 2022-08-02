@@ -1,15 +1,11 @@
 package com.example.financas.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,8 +17,9 @@ public class Category {
     @Column(nullable = false, updatable = false)
     private LocalDate createdAt;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Purchase> purchases = new ArrayList<>();
+    //Como eh um relacionamento unidirecional, não precisamos da lista de compras
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+//    private List<Purchase> purchases = new ArrayList<>();
 
     public Category() {
     }
@@ -55,14 +52,6 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Purchase> getPurchases() {
-        return purchases;
-    }
-
-    public void setPurchases(List<Purchase> purchases) {
-        this.purchases = purchases;
     }
 
     @Override

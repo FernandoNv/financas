@@ -73,8 +73,6 @@ public class SampleDataLoader implements CommandLineRunner {
                 LocalDate.now()
         );
 
-        categoryRepository.saveAll(Arrays.asList(c1, c2));
-
         Purchase purchase1 = new Purchase(
                 null,
                 LocalDate.of(2022, 2,2),
@@ -108,6 +106,7 @@ public class SampleDataLoader implements CommandLineRunner {
         );
         purchase3.setCategory(c2);
 
+        categoryRepository.saveAll(Arrays.asList(c1, c2));
         purchaseRepository.saveAll(Arrays.asList(purchase1, purchase2, purchase3));
 
         Bill b1 = new Bill(null, LocalDate.of(2022, 3,1));

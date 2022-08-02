@@ -1,13 +1,6 @@
 package com.example.financas.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,23 +10,26 @@ import java.util.Objects;
 public class Purchase {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, updatable = false)
     private LocalDate date;
+    @Column(nullable = false, precision = 10, scale = 2)
     private Double priceTotal;
+    @Column(precision = 10, scale = 2)
     private Double priceShared;
     private String description;
     private int instalments;
     private int paidInstalments;
     private boolean isShared;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "fk_category_id")
     private Category category;
 
     @ManyToMany
     @JoinTable(
             name = "purchase_bill",
-            joinColumns = @JoinColumn(name = "purchase_id"),
-            inverseJoinColumns = @JoinColumn(name = "bill_id")
+            joinColumns = @JoinColumn(name = "fk_purchase_id"),
+            inverseJoinColumns = @JoinColumn(name = "fk_bill_id")
     )
     private List<Bill> bills = new ArrayList<>();
 
