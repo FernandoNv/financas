@@ -21,7 +21,7 @@ public class Bill {
     @Column(nullable = false)
     private LocalDate expiredAt;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "fk_person_id")
     private Person person;
 

@@ -111,11 +111,11 @@ public class SampleDataLoader implements CommandLineRunner {
 
         Bill b1 = new Bill(null, LocalDate.of(2022, 3,1));
         b1.setPerson(p1);
-        p1.getBills().add(b1);
+        //p1.getBills().add(b1);
 
         Bill b2 = new Bill(null, LocalDate.of(2022, 3,1));
         b2.setPerson(p2);
-        p2.getBills().add(b2);
+        //p2.getBills().add(b2);
 
         billRepository.saveAll(Arrays.asList(b1, b2));
 

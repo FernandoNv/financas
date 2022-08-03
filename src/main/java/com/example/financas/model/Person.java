@@ -32,8 +32,9 @@ public class Person {
     @CollectionTable(name = "TELEFONE")
     private Set<String> phoneNumbers = new HashSet<>();
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private List<Bill> bills = new ArrayList<>();
+    //Como eh um relacionamento unidirecional, não precisamos da lista de faturas
+    //@OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    //private List<Bill> bills = new ArrayList<>();
 
     public Person() {
     }
@@ -85,13 +86,6 @@ public class Person {
         this.id = id;
     }
 
-    public List<Bill> getBills() {
-        return bills;
-    }
-
-    public void setBills(List<Bill> bills) {
-        this.bills = bills;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -113,7 +107,6 @@ public class Person {
                 ", name='" + name + '\'' +
                 ", phoneNumber=" + phoneNumbers +
                 ", email='" + email + '\'' +
-                ", bills=" + bills +
                 '}';
     }
 }
