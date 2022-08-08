@@ -1,8 +1,6 @@
 package com.example.financas.service;
 
-import com.example.financas.dto.CategoryDTO;
 import com.example.financas.dto.PersonDTO;
-import com.example.financas.model.Category;
 import com.example.financas.model.Person;
 import com.example.financas.repository.PersonRepository;
 import org.jetbrains.annotations.NotNull;

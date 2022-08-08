@@ -1,5 +1,6 @@
 package com.example.financas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
@@ -22,9 +22,9 @@ public class Purchase {
     @Column(nullable = false, updatable = false)
     private LocalDate date;
     @Column(nullable = false, precision = 10, scale = 2)
-    private Double priceTotal;
+    private Double totalPrice;
     @Column(precision = 10, scale = 2)
-    private Double priceShared;
+    private Double sharedPrice;
     private String description;
     private int instalments;
     private int paidInstalments;
@@ -34,21 +34,17 @@ public class Purchase {
     @JoinColumn(name = "fk_category_id")
     private Category category;
 
-    @ManyToMany
-    @JoinTable(
-            name = "purchase_bill",
-            joinColumns = @JoinColumn(name = "fk_purchase_id"),
-            inverseJoinColumns = @JoinColumn(name = "fk_bill_id")
-    )
+    @JsonIgnore
+    @ManyToMany(mappedBy = "purchases", cascade = CascadeType.ALL)
     private List<Bill> bills = new ArrayList<>();
 
     public Purchase() {
     }
 
-    public Purchase(Long id, LocalDate date, Double priceTotal, String description, int instalments, int paidInstalments, boolean isShared) {
+    public Purchase(Long id, LocalDate date, Double totalPrice, String description, int instalments, int paidInstalments, boolean isShared) {
         this.id = id;
         this.date = date;
-        this.priceTotal = priceTotal;
+        this.totalPrice = totalPrice;
         this.description = description;
         this.instalments = instalments;
         this.paidInstalments = paidInstalments;
@@ -71,24 +67,25 @@ public class Purchase {
         this.date = date;
     }
 
-    public Double getPriceTotal() {
-        return priceTotal;
+    public Double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setPriceTotal(Double priceTotal) {
-        this.priceTotal = priceTotal;
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
-    public Double getPriceShared() {
-        return priceShared;
+    public Double getSharedPrice() {
+        return sharedPrice;
     }
 
-    public void setPriceShared(Double priceShared) {
-        this.priceShared = priceShared;
+    public void setSharedPrice(Double sharedPrice) {
+        this.sharedPrice = sharedPrice;
     }
 
-    public void setPriceShared() {
-        if(isShared && bills.size() > 0) this.priceShared = priceTotal/bills.size();
+    public void setSharedPrice() {
+        if(isShared && bills.size() > 0) this.sharedPrice = totalPrice/bills.size();
+        System.out.println(this.sharedPrice);
     }
 
     public String getDescription() {
@@ -157,14 +154,13 @@ public class Purchase {
         return "Purchase{" +
                 "id=" + id +
                 ", date=" + date +
-                ", priceTotal=" + priceTotal +
-                ", priceShared=" + priceShared +
+                ", totalPrice=" + totalPrice +
+                ", sharedPrice=" + sharedPrice +
                 ", description='" + description + '\'' +
                 ", instalments=" + instalments +
                 ", paidInstalments=" + paidInstalments +
                 ", isShared=" + isShared +
-                ", category=" + category +
-                ", bills=" + bills +
+                ", category=" + category.getName() +
                 '}';
     }
 }

@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ import java.util.Objects;
 public class Bill {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private LocalDate expiredAt;
 
@@ -25,7 +27,15 @@ public class Bill {
     @JoinColumn(name = "fk_person_id")
     private Person person;
 
-    @ManyToMany(mappedBy = "bills", cascade = CascadeType.ALL)
+    @Column(precision = 10, scale = 2)
+    private Double totalPrice;
+
+    @ManyToMany
+    @JoinTable(
+            name = "bill_purchase",
+            joinColumns = @JoinColumn(name = "fk_bill_id"),
+            inverseJoinColumns = @JoinColumn(name = "fk_purchase_id")
+    )
     private List<Purchase> purchases = new ArrayList<>();
 
     public Bill() {
@@ -34,6 +44,7 @@ public class Bill {
     public Bill(Long id, LocalDate expiredAt) {
         this.id = id;
         this.expiredAt = expiredAt;
+        this.totalPrice = 0D;
     }
 
     public Long getId() {
@@ -52,9 +63,18 @@ public class Bill {
         this.expiredAt = expiredAt;
     }
 
-    @Column(precision = 10, scale = 2)
     public double getTotalPrice() {
-        return purchases.stream().map(p -> p.isShared() ? p.getPriceShared() : p.getPriceTotal()).reduce(0d, Double::sum);
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public void setTotalPrice() {
+        this.totalPrice = purchases.stream()
+                .map(p -> p.isShared() ? p.getSharedPrice() : p.getTotalPrice())
+                .reduce(0d, Double::sum);
     }
 
     public Person getPerson() {
@@ -71,6 +91,7 @@ public class Bill {
 
     public void setPurchases(List<Purchase> purchases) {
         this.purchases = purchases;
+        this.setTotalPrice();
     }
 
     @Override

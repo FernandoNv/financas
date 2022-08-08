@@ -59,6 +59,7 @@ public class SampleDataLoader implements CommandLineRunner {
         );
 
         p2.getPhoneNumbers().add("2112121212");
+        logger.info("Inserting person...");
         personRepository.saveAll(Arrays.asList(p1, p2));
 
         Category c1 = new Category(
@@ -73,6 +74,7 @@ public class SampleDataLoader implements CommandLineRunner {
                 LocalDate.now()
         );
 
+        //Long id, LocalDate date, Double totalPrice, Double sharedPrice, String description, int instalments, int paidInstalments, boolean isShared
         Purchase purchase1 = new Purchase(
                 null,
                 LocalDate.of(2022, 2,2),
@@ -83,6 +85,9 @@ public class SampleDataLoader implements CommandLineRunner {
                 false
         );
         purchase1.setCategory(c1);
+
+        logger.info("Inserting category...");
+        categoryRepository.saveAll(Arrays.asList(c1, c2));
 
         Purchase purchase2 = new Purchase(
                 null,
@@ -106,8 +111,8 @@ public class SampleDataLoader implements CommandLineRunner {
         );
         purchase3.setCategory(c2);
 
-        categoryRepository.saveAll(Arrays.asList(c1, c2));
-        purchaseRepository.saveAll(Arrays.asList(purchase1, purchase2, purchase3));
+        //logger.info("Inserting purchase...");
+        //purchaseRepository.saveAll(Arrays.asList(purchase1, purchase2, purchase3));
 
         Bill b1 = new Bill(null, LocalDate.of(2022, 3,1));
         b1.setPerson(p1);
@@ -117,16 +122,25 @@ public class SampleDataLoader implements CommandLineRunner {
         b2.setPerson(p2);
         //p2.getBills().add(b2);
 
-        billRepository.saveAll(Arrays.asList(b1, b2));
+//        logger.info("Inserting bill... first");
+//        billRepository.saveAll(Arrays.asList(b1, b2));
 
         b1.getPurchases().addAll(Arrays.asList(purchase1, purchase2, purchase3));
         b2.getPurchases().add(purchase3);
+
         purchase1.getBills().add(b1);
         purchase2.getBills().add(b1);
         purchase3.getBills().addAll(Arrays.asList(b1, b2));
-        purchase3.setPriceShared();
+        purchase3.setSharedPrice();
 
+        b1.setTotalPrice();
+        b2.setTotalPrice();
+
+        logger.info("Inserting purchase...");
+        purchaseRepository.saveAll(Arrays.asList(purchase1, purchase2, purchase3));
+        logger.info("Inserting bill...");
         billRepository.saveAll(Arrays.asList(b1, b2));
-//        purchaseRepository.saveAll(Arrays.asList(purchase1, purchase2, purchase3));
+        logger.info("Bill 1 total - " + b1.getTotalPrice());
+        logger.info("Bill 2 total - " + b2.getTotalPrice());
     }
 }
