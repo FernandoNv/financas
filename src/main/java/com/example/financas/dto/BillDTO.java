@@ -4,15 +4,16 @@ import com.example.financas.model.Person;
 import com.example.financas.model.Purchase;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BillDTO implements Serializable {
     private Long id;
     private LocalDate expiredAt;
     private Person person;
     private Double totalPrice;
-    private List<Purchase> purchases = new ArrayList<>();
+    private Set<Purchase> purchases = new HashSet<>();
 
     public BillDTO(Long id, LocalDate expiredAt, Person person, Double totalPrice) {
         this.id = id;
@@ -53,11 +54,11 @@ public class BillDTO implements Serializable {
         this.totalPrice = totalPrice;
     }
 
-    public List<Purchase> getPurchases() {
+    public Set<Purchase> getPurchases() {
         return purchases;
     }
 
-    public void setPurchases(List<Purchase> purchases) {
+    public void setPurchases(Set<Purchase> purchases) {
         this.purchases = purchases;
     }
 }

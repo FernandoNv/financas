@@ -51,6 +51,16 @@ public class BillController {
         return ResponseEntity.ok().body(bill);
     }
 
+    @GetMapping(value = "person/{id}", produces = "application/json")
+    public ResponseEntity<Object> findAllByIdPerson(@PathVariable Long id){
+        List<Bill> bills = billService.findAllByIdPerson(id);
+        if(bills == null){
+            return ResponseEntity.badRequest().body(new HttpErrorResponse(HttpStatus.NOT_FOUND.value(), "Id inválido"));
+        }
+
+        return ResponseEntity.ok().body(bills);
+    }
+
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Bill> addBill(@RequestBody BillDTO billDTO ){
         Bill newBill = billService.addBill(billDTO);

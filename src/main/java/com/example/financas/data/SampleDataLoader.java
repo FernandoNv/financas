@@ -1,5 +1,7 @@
 package com.example.financas.data;
 
+import com.example.financas.dto.PersonDTO;
+import com.example.financas.dto.PurchaseDTO;
 import com.example.financas.model.Bill;
 import com.example.financas.model.Category;
 import com.example.financas.model.Person;
@@ -8,8 +10,10 @@ import com.example.financas.repository.BillRepository;
 import com.example.financas.repository.CategoryRepository;
 import com.example.financas.repository.PersonRepository;
 import com.example.financas.repository.PurchaseRepository;
+import com.example.financas.service.PurchaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -25,19 +29,15 @@ public class SampleDataLoader implements CommandLineRunner {
     private PurchaseRepository purchaseRepository;
     private BillRepository billRepository;
 //    private Faker faker;
+    private PurchaseService purchaseService;
 
-    public SampleDataLoader(
-            CategoryRepository categoryRepository,
-            PersonRepository personRepository,
-            PurchaseRepository purchaseRepository,
-            BillRepository billRepository
-//            Faker faker
-    ) {
+    @Autowired
+    public SampleDataLoader(CategoryRepository categoryRepository, PersonRepository personRepository, PurchaseRepository purchaseRepository, BillRepository billRepository, PurchaseService purchaseService) {
         this.categoryRepository = categoryRepository;
         this.personRepository = personRepository;
         this.purchaseRepository = purchaseRepository;
         this.billRepository = billRepository;
-//        this.faker = faker;
+        this.purchaseService = purchaseService;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SampleDataLoader implements CommandLineRunner {
         Purchase purchase1 = new Purchase(
                 null,
                 LocalDate.of(2022, 2,2),
-                27.90,
+                9.99,
                 "99app",
                 1,
                 1,
@@ -107,7 +107,7 @@ public class SampleDataLoader implements CommandLineRunner {
                 "Uber",
                 1,
                 1,
-                true
+                false
         );
         purchase3.setCategory(c2);
 
@@ -142,5 +142,22 @@ public class SampleDataLoader implements CommandLineRunner {
         billRepository.saveAll(Arrays.asList(b1, b2));
         logger.info("Bill 1 total - " + b1.getTotalPrice());
         logger.info("Bill 2 total - " + b2.getTotalPrice());
+
+        PurchaseDTO purchase4 = new PurchaseDTO(
+                null,
+                LocalDate.of(2022, 2, 1),
+                50D,
+                "Compra shared teste com criacao de novas bills",
+                3,
+                1,
+                true
+        );
+        purchase4.setCategory(c1);
+        PersonDTO pdto1 = new PersonDTO();
+        pdto1.setId(1L);
+        PersonDTO pdto2 = new PersonDTO();
+        pdto2.setId(2L);
+        purchase4.setPersons(Arrays.asList(pdto1, pdto2));
+        purchaseService.addPurchase(purchase4);
     }
 }

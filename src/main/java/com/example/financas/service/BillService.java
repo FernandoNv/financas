@@ -63,4 +63,8 @@ public class BillService {
 
         return true;
     }
+
+    public List<Bill> findAllByIdPerson(Long id) {
+        return billRepository.findAllByIdPerson(id);
+    }
 }

@@ -3,6 +3,7 @@ package com.example.financas.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,9 +12,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Bill {
@@ -36,7 +37,7 @@ public class Bill {
             joinColumns = @JoinColumn(name = "fk_bill_id"),
             inverseJoinColumns = @JoinColumn(name = "fk_purchase_id")
     )
-    private List<Purchase> purchases = new ArrayList<>();
+    private Set<Purchase> purchases = new HashSet<>();
 
     public Bill() {
     }
@@ -85,13 +86,12 @@ public class Bill {
         this.person = person;
     }
 
-    public List<Purchase> getPurchases() {
+    public Set<Purchase> getPurchases() {
         return purchases;
     }
 
-    public void setPurchases(List<Purchase> purchases) {
+    public void setPurchases(Set<Purchase> purchases) {
         this.purchases = purchases;
-        this.setTotalPrice();
     }
 
     @Override

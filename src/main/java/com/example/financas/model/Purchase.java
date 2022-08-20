@@ -11,9 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Purchase {
@@ -35,8 +35,8 @@ public class Purchase {
     private Category category;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "purchases", cascade = CascadeType.ALL)
-    private List<Bill> bills = new ArrayList<>();
+    @ManyToMany(mappedBy = "purchases", cascade = CascadeType.MERGE)
+    private Set<Bill> bills = new HashSet<>();
 
     public Purchase() {
     }
@@ -128,11 +128,11 @@ public class Purchase {
         this.category = category;
     }
 
-    public List<Bill> getBills() {
+    public Set<Bill> getBills() {
         return bills;
     }
 
-    public void setBills(List<Bill> bills) {
+    public void setBills(Set<Bill> bills) {
         this.bills = bills;
     }
 

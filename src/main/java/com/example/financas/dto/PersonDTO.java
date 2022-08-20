@@ -12,6 +12,9 @@ public class PersonDTO implements Serializable {
     private LocalDate createdAt;
     private Set<String> phoneNumbers = new HashSet<>();
 
+    public PersonDTO() {
+    }
+
     public PersonDTO(Long id, String name, String email, LocalDate createdAt) {
         this.id = id;
         this.name = name;
